@@ -2,7 +2,8 @@ import { initializeApp } from 'firebase/app';
 import { 
   GoogleAuthProvider, 
   getAuth, 
-  signInWithPopup 
+  signInWithPopup,
+  createUserWithEmailAndPassword
 } from "firebase/auth";
 
 import { 
@@ -26,17 +27,17 @@ const firebaseApp = initializeApp(firebaseConfig);
 
 const db = getFirestore();
 
-const provider = new GoogleAuthProvider();
+const googleProvider = new GoogleAuthProvider();
 
-provider.setCustomParameters({
+googleProvider.setCustomParameters({
   prompt: "select_account"
 });
 
 export const auth = getAuth();
 
-export const signInWithGooglePopup = () => signInWithPopup(auth, provider);
+export const signInWithGooglePopup = () => signInWithPopup(auth, googleProvider);
 
-export const upsertUser = async (user) => {
+export const upsertUser = async (user, additionalFields = {}) => {
 
   const { email, uid, displayName } = user;
 
@@ -51,7 +52,8 @@ export const upsertUser = async (user) => {
       await setDoc(userReference, {
         email,
         displayName,
-        createdAt
+        createdAt,
+        ...additionalFields
       });
     } catch (error) {
       console.error('Error authenticating user', error);
@@ -59,4 +61,13 @@ export const upsertUser = async (user) => {
   }
 
   return userReference;
+}
+
+export const registerUser = async (email, password) => {
+
+  if(!email ||!password) {
+    return;
+  }
+
+  return await createUserWithEmailAndPassword(auth, email, password);
 }
