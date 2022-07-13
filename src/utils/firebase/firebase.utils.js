@@ -14,7 +14,11 @@ import {
   collection, 
   doc, 
   getDoc, 
-  setDoc
+  setDoc,
+  writeBatch,
+  getDocs,
+  query,
+  limit
 } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -26,9 +30,40 @@ const firebaseConfig = {
   appId: "1:15930571817:web:efd783bb38283468977038"
 };
 
-const firebaseApp = initializeApp(firebaseConfig);
+export const firebaseApp = initializeApp(firebaseConfig);
 
-const db = getFirestore();
+export const db = getFirestore();
+
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd) => {
+  const collectionRef = collection(db, collectionKey);
+
+  const batch = writeBatch(db);
+
+  objectsToAdd.forEach(object => {
+    const docRef = doc(collectionRef, object.title.toLowerCase());
+
+    batch.set(docRef, object);
+  });
+
+  await batch.commit();
+}
+
+export const getCategoriesAndDocuments = async () => {
+
+  const categories = query(collection(db, 'categories'));
+
+  const querySnapshot = await getDocs(categories);
+
+  const categoryMap = querySnapshot.docs.reduce((accumulated, document) => {
+    const { title, items } = document.data();
+
+    accumulated[title.toLowerCase()] = items;
+
+    return accumulated;
+  }, {});
+
+  return categoryMap;
+}
 
 const googleProvider = new GoogleAuthProvider();
 

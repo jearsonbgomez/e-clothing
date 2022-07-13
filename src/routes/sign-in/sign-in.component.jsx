@@ -1,7 +1,7 @@
-import { useContext, useState } from "react";
-import Button from "../../components/button/button.component";
+import { useState } from "react";
+import Button, { BUTTON_TYPE_CLASSES } from "../../components/button/button.component";
 import FormInput from "../../components/form-input/form-input.component";
-import { authenticateUser, upsertUser, signInWithGooglePopup } from "../../utils/firebase/firebase.utils";
+import { authenticateUser, signInWithGooglePopup } from "../../utils/firebase/firebase.utils";
 import './sign-in.styles.scss';
 
 const user = {
@@ -76,8 +76,8 @@ const SignIn = () => {
           }}
         />
         <div className="buttons-container">
-          <Button buttonType="inverted" type="submit">Sign In</Button>
-          <Button type="button" buttonType="google" onClick={openSignInModal}>Google Sign in</Button>
+          <Button buttonType={BUTTON_TYPE_CLASSES.inverted} type="submit">Sign In</Button>
+          <Button type="button" buttonType={BUTTON_TYPE_CLASSES.google} onClick={openSignInModal}>Google Sign in</Button>
         </div>
       </form>
     </div>
