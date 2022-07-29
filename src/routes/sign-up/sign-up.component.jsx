@@ -1,8 +1,7 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Button, { BUTTON_TYPE_CLASSES } from "../../components/button/button.component";
 import FormInput from "../../components/form-input/form-input.component";
 import { registerUser, upsertUser } from "../../utils/firebase/firebase.utils";
-import { UserContext } from '../../contexts/user.context';
 
 import './sign-up.styles.scss';
 

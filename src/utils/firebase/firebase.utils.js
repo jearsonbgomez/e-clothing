@@ -54,15 +54,8 @@ export const getCategoriesAndDocuments = async () => {
 
   const querySnapshot = await getDocs(categories);
 
-  const categoryMap = querySnapshot.docs.reduce((accumulated, document) => {
-    const { title, items } = document.data();
+  return querySnapshot.docs.map(document => document.data());
 
-    accumulated[title.toLowerCase()] = items;
-
-    return accumulated;
-  }, {});
-
-  return categoryMap;
 }
 
 const googleProvider = new GoogleAuthProvider();
